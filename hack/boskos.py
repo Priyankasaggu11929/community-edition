@@ -92,7 +92,7 @@ def main():
 
     parser.add_argument(
         '--user', dest="user", type=str,
-        default="cluster-api-provider-aws",
+        default="tanzu-community-edition",
         help="username"
     )
 
