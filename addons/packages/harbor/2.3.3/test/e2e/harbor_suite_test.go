@@ -87,9 +87,11 @@ var _ = BeforeSuite(func() {
 
 	packageComponentsNamespace = "goharbor"
 
+	contourValuesFile := configContourYamlFile()
+
 	packageDependencies = []*packageDependency{
 		{"cert-manager", "cert-manager", ""},
-		{"contour", "contour", filepath.Join("fixtures", "contour.yaml")},
+		{"contour", "contour", contourValuesFile},
 	}
 
 	if !hasDefaultStorageClass() {
@@ -273,7 +275,7 @@ func generateHarborPassword() string {
 
 func installPackage(name, packageName, version, valuesFilename string) {
 	installedPackages = append([]string{name}, installedPackages...)
-
+	fmt.Printf("valuesFilename: %s\n", valuesFilename)
 	args := []string{
 		"package", "install", name,
 		"--poll-interval", packagePollInterval,
@@ -334,4 +336,21 @@ func isPrivate(ip net.IP) bool {
 	}
 
 	return len(ip) == net.IPv6len && ip[0]&0xfe == 0xfc
+}
+
+func configContourYamlFile() string {
+	jsonPath := `jsonpath='{.clusters[0].name}'`
+	output, _ := utils.Kubectl(nil, "config", "view", "-o", jsonPath)
+	//if provider is vc change contour service type to NodePort
+	//otherwise use LoadBalancer
+	if strings.Contains(output, "vc") {
+		valuesFilename, err := utils.ReadFileAndReplaceContentsTempFile(filepath.Join("fixtures", "contour.yaml"),
+			map[string]string{
+				"LoadBalancer": "NodePort",
+			},
+		)
+		Expect(err).NotTo(HaveOccurred())
+		return valuesFilename
+	}
+	return filepath.Join("fixtures", "contour.yaml")
 }
