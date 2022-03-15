@@ -24,7 +24,7 @@ source "${TCE_REPO_PATH}/test/util/utils.sh"
 # shellcheck source=test/util/aws-nuke-tear-down.sh
 source "${TCE_REPO_PATH}/test/util/aws-nuke-tear-down.sh"
 # "${TCE_REPO_PATH}/test/build-tce.sh" || { error "TCE installation failed!"; exit 1; }
-"${TCE_REPO_PATH}/test/fetch-tce.sh"
+source "${TCE_REPO_PATH}/test/fetch-tce.sh"
 "${TCE_REPO_PATH}/test/install-jq.sh"
 "${TCE_REPO_PATH}/test/install-dependencies.sh" || { error "Dependency installation failed!"; exit 1; }
 
