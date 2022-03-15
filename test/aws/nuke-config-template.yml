@@ -1,5 +1,5 @@
 regions:
-- us-east-2
+- ap-south-1
 
 account-blocklist:
 - 0000000000
