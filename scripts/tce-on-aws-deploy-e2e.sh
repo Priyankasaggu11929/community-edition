@@ -1,8 +1,22 @@
 #!/bin/bash
 
-set -eux
+set -o nounset
+set -o pipefail
 
 JANITOR_ENABLED=1
+
+ARTIFACTS="${ARTIFACTS:-${PWD}/_artifacts}"
+mkdir -p "$ARTIFACTS/logs/"
+
+# our exit handler (trap)
+cleanup() {
+  # stop boskos heartbeat
+  [[ -z ${HEART_BEAT_PID:-} ]] || kill -9 "${HEART_BEAT_PID}"
+}
+trap cleanup EXIT
+
+#Install requests module explicitly for HTTP calls
+python3 -m pip install requests
 
 # If BOSKOS_HOST is set then acquire an AWS account from Boskos.
 if [ -n "${BOSKOS_HOST:-}" ]; then
