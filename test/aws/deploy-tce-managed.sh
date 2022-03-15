@@ -25,7 +25,7 @@ source "${TCE_REPO_PATH}/test/util/utils.sh"
 source "${TCE_REPO_PATH}/test/util/aws-nuke-tear-down.sh"
 # "${TCE_REPO_PATH}/test/build-tce.sh" || { error "TCE installation failed!"; exit 1; }
 chmod +x ./${TCE_REPO_PATH}/test/fetch-tce.sh
-./${TCE_REPO_PATH}/test/fetch-tce.sh $(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
+${TCE_REPO_PATH}/test/fetch-tce.sh $(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
 "${TCE_REPO_PATH}/test/install-jq.sh"
 "${TCE_REPO_PATH}/test/install-dependencies.sh" || { error "Dependency installation failed!"; exit 1; }
 
