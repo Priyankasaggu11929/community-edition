@@ -29,7 +29,7 @@ source "${TCE_REPO_PATH}/test/util/aws-nuke-tear-down.sh"
 
 function delete_management_cluster {
     echo "$@"
-    export AWS_REGION="us-east-2"
+    export AWS_REGION="ap-south-1"
     export CLUSTER_NAME="${MGMT_CLUSTER_NAME}"
     tanzu management-cluster delete "${CLUSTER_NAME}" -y || {
         collect_management_cluster_diagnostics "${CLUSTER_NAME}"
