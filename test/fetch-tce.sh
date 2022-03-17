@@ -13,7 +13,7 @@ function error {
 
 # This script works only in Linux and MacOS (Darwin) and amd64 (64 bit) platforms
 
-TCE_VERSION=$(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
+TCE_VERSION=v0.10.0
 
 if [[ -z ${TCE_VERSION} ]]; then
     echo "TCE release version is not passed to the script!"
