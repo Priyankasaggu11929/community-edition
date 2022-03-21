@@ -18,6 +18,9 @@ trap cleanup EXIT
 #Install requests module explicitly for HTTP calls
 python -m pip install requests
 
+python --version
+python3 --version
+
 # If BOSKOS_HOST is set then acquire an AWS account from Boskos.
 if [ -n "${BOSKOS_HOST:-}" ]; then
   # Check out the account from Boskos and store the produced environment
