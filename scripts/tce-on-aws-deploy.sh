@@ -15,7 +15,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-apt-get update && apt-get install -y python3-pip sudo
 
 #Install requests module explicitly for HTTP calls
 python3 -m pip install requests
