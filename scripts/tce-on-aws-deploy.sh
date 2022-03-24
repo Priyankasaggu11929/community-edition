@@ -15,7 +15,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-
 #Install requests module explicitly for HTTP calls
 python3 -m pip install requests
 
@@ -49,8 +48,7 @@ fi
 
 
 # Deploy the TCE Managed Cluster on AWS
-chmod +x test/fetch-tce.sh && ./test/fetch-tce.sh $(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
-
+# chmod +x test/fetch-tce.sh && ./test/fetch-tce.sh $(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
 make aws-management-and-workload-cluster-e2e-test
 
 test_status="${?}"
