@@ -49,12 +49,9 @@ fi
 
 
 # Deploy the TCE Managed Cluster on AWS
-# chmod +x test/fetch-tce.sh && ./test/fetch-tce.sh $(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
+chmod +x test/fetch-tce.sh && ./test/fetch-tce.sh $(curl https://api.github.com/repos/vmware-tanzu/community-edition/releases -s | jq  -r '.[0].tag_name')
 
 make aws-management-and-workload-cluster-e2e-test
-#TCE_REPO_PATH="$(git rev-parse --show-toplevel)"
-
-#"${TCE_REPO_PATH}/test/aws/deploy-tce-managed.sh"
 
 test_status="${?}"
 
