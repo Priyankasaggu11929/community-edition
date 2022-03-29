@@ -32,10 +32,11 @@ func init() {
 	ConfigureCmd.Flags().StringVarP(&co.clusterConfigFile, "config", "f", "", "Configuration file for unmanaged cluster creation")
 	ConfigureCmd.Flags().StringVar(&co.infrastructureProvider, "provider", "", "The infrastructure provider to use for cluster creation. Default is 'kind'")
 	ConfigureCmd.Flags().StringVarP(&co.tkrLocation, "tkr", "t", "", "The Tanzu Kubernetes Release location.")
-	ConfigureCmd.Flags().StringVarP(&co.cni, "cni", "c", "calico", "The CNI to deploy. Default is 'calico'")
+	ConfigureCmd.Flags().StringVarP(&co.cni, "cni", "c", "", "The CNI to deploy. Default is 'calico'")
 	ConfigureCmd.Flags().StringVar(&co.podcidr, "pod-cidr", "", "The CIDR to use for Pod IP addresses. Default and format is '10.244.0.0/16'")
 	ConfigureCmd.Flags().StringVar(&co.servicecidr, "service-cidr", "", "The CIDR to use for Service IP addresses. Default and format is '10.96.0.0/16'")
 	ConfigureCmd.Flags().Bool("tty-disable", false, "Disable log stylization and emojis")
+	ConfigureCmd.Flags().StringSliceVar(&co.additionalRepo, "additional-repo", []string{}, "Addresses for additional package repositories to install")
 }
 
 func configure(cmd *cobra.Command, args []string) error {
@@ -51,14 +52,15 @@ func configure(cmd *cobra.Command, args []string) error {
 	log := logger.NewLogger(TtySetting(cmd.Flags()), 0)
 
 	// Determine our configuration to use
-	configArgs := map[string]string{
-		config.ClusterConfigFile: co.clusterConfigFile,
-		config.ClusterName:       clusterName,
-		config.Provider:          co.infrastructureProvider,
-		config.TKRLocation:       co.tkrLocation,
-		config.Cni:               co.cni,
-		config.PodCIDR:           co.podcidr,
-		config.ServiceCIDR:       co.servicecidr,
+	configArgs := map[string]interface{}{
+		config.ClusterConfigFile:      co.clusterConfigFile,
+		config.ClusterName:            clusterName,
+		config.Provider:               co.infrastructureProvider,
+		config.TKRLocation:            co.tkrLocation,
+		config.Cni:                    co.cni,
+		config.PodCIDR:                co.podcidr,
+		config.ServiceCIDR:            co.servicecidr,
+		config.AdditionalPackageRepos: co.additionalRepo,
 	}
 
 	scConfig, err := config.InitializeConfiguration(configArgs)

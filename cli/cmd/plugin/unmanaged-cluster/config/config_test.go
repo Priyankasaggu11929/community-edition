@@ -12,17 +12,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var emptyConfig = map[string]string{
-	ClusterConfigFile:     "",
-	ClusterName:           "",
-	Tty:                   "",
-	TKRLocation:           "",
-	Provider:              "",
-	Cni:                   "",
-	PodCIDR:               "",
-	ServiceCIDR:           "",
-	ControlPlaneNodeCount: "",
-	WorkerNodeCount:       "",
+var emptyConfig = map[string]interface{}{
+	ClusterConfigFile:      "",
+	ClusterName:            "",
+	Tty:                    "",
+	TKRLocation:            "",
+	Provider:               "",
+	Cni:                    "",
+	PodCIDR:                "",
+	ServiceCIDR:            "",
+	ControlPlaneNodeCount:  "",
+	WorkerNodeCount:        "",
+	AdditionalPackageRepos: []string{},
 }
 
 func TestInitializeConfigurationNoName(t *testing.T) {
@@ -33,7 +34,7 @@ func TestInitializeConfigurationNoName(t *testing.T) {
 }
 
 func TestInitializeConfigurationDefaults(t *testing.T) {
-	args := map[string]string{ClusterName: "test"}
+	args := map[string]interface{}{ClusterName: "test"}
 	config, err := InitializeConfiguration(args)
 	if err != nil {
 		t.Error("initialization should pass")
@@ -47,8 +48,8 @@ func TestInitializeConfigurationDefaults(t *testing.T) {
 		t.Errorf("expected default Cni value, was: %q", config.Cni)
 	}
 
-	if config.TkrLocation != defaultConfigValues[TKRLocation] {
-		t.Errorf("expected default TkrLocation, was: %q", config.TkrLocation)
+	if len(config.AdditionalPackageRepos) != 0 {
+		t.Errorf("expected no AdditionalPackageRepos, was: %q", config.AdditionalPackageRepos)
 	}
 
 	if config.Provider != defaultConfigValues[Provider] {
@@ -92,8 +93,8 @@ func TestInitializeConfigurationEnvVariables(t *testing.T) {
 		t.Errorf("expected default Cni value, was: %q", config.Cni)
 	}
 
-	if config.TkrLocation != defaultConfigValues[TKRLocation] {
-		t.Errorf("expected default TkrLocation, was: %q", config.TkrLocation)
+	if len(config.AdditionalPackageRepos) != 0 {
+		t.Errorf("expected no AdditionalPackageRepos, was: %q", config.AdditionalPackageRepos)
 	}
 
 	if config.PodCidr != defaultConfigValues[PodCIDR] {
@@ -116,7 +117,7 @@ func TestInitializeConfigurationEnvVariables(t *testing.T) {
 func TestInitializeConfigurationArgsTakePrecedent(t *testing.T) {
 	os.Setenv("TANZU_PROVIDER", "test_provider")
 	os.Setenv("TANZU_CLUSTER_NAME", "test2")
-	args := map[string]string{ClusterName: "test"}
+	args := map[string]interface{}{ClusterName: "test"}
 	config, err := InitializeConfiguration(args)
 	if err != nil {
 		t.Error("initialization should pass")
@@ -134,8 +135,8 @@ func TestInitializeConfigurationArgsTakePrecedent(t *testing.T) {
 		t.Errorf("expected default Cni value, was: %q", config.Cni)
 	}
 
-	if config.TkrLocation != defaultConfigValues[TKRLocation] {
-		t.Errorf("expected default TkrLocation, was: %q", config.TkrLocation)
+	if len(config.AdditionalPackageRepos) != 0 {
+		t.Errorf("expected no AdditionalPackageRepos, was: %q", len(config.AdditionalPackageRepos))
 	}
 
 	if config.PodCidr != defaultConfigValues[PodCIDR] {
@@ -163,14 +164,15 @@ func TestInitializeConfigurationFromConfigFile(t *testing.T) {
 	yamlEncoder.SetIndent(2)
 
 	if err := yamlEncoder.Encode(UnmanagedClusterConfig{
-		ClusterName:           "test3",
-		Provider:              "courteous",
-		Cni:                   "bongos",
-		PodCidr:               "8.8.8.0/24",
-		ServiceCidr:           "9.9.9.0/24",
-		TkrLocation:           "here",
-		ControlPlaneNodeCount: "99",
-		WorkerNodeCount:       "25",
+		ClusterName:            "test3",
+		Provider:               "courteous",
+		Cni:                    "bongos",
+		PodCidr:                "8.8.8.0/24",
+		ServiceCidr:            "9.9.9.0/24",
+		TkrLocation:            "here",
+		AdditionalPackageRepos: []string{"example.registry.com", "another.example.com"},
+		ControlPlaneNodeCount:  "99",
+		WorkerNodeCount:        "25",
 	}); err != nil {
 		t.Errorf("failed setting up test data")
 		return
@@ -187,7 +189,7 @@ func TestInitializeConfigurationFromConfigFile(t *testing.T) {
 		return
 	}
 
-	args := map[string]string{ClusterConfigFile: f.Name()}
+	args := map[string]interface{}{ClusterConfigFile: f.Name()}
 	config, err := InitializeConfiguration(args)
 	if err != nil {
 		t.Error("initialization should pass")
@@ -207,6 +209,14 @@ func TestInitializeConfigurationFromConfigFile(t *testing.T) {
 
 	if config.TkrLocation != "here" {
 		t.Errorf("expected TkrLocation to be set to 'here', was: %q", config.TkrLocation)
+	}
+
+	if config.AdditionalPackageRepos[0] != "example.registry.com" {
+		t.Errorf("expected first AdditionalPackageRepos value to be 'example.registry.com', was: %q", config.AdditionalPackageRepos[0])
+	}
+
+	if config.AdditionalPackageRepos[1] != "another.example.com" {
+		t.Errorf("expected first AdditionalPackageRepos value to be 'another.example.com', was: %q", config.AdditionalPackageRepos[1])
 	}
 
 	if config.PodCidr != "8.8.8.0/24" {

@@ -9,7 +9,7 @@ source distribution of VMware Tanzu. It can be installed and deployed in minutes
 local workstation or favorite infrastructure provider. Along with cluster
 management, powered by [Cluster API](https://github.com/kubernetes-sigs/cluster-api),
 Tanzu Community Edition enables higher-level functionality via its robust
-[package management](https://tanzucommunityedition.io/docs/latest/package-management)
+[package management](https://tanzucommunityedition.io/docs/package-management)
 built on top of [Carvel's kapp-controller](https://carvel.dev/kapp-controller/),
 and opinionated, yet extensible, [Carvel packages](#packages).
 
@@ -25,7 +25,7 @@ and opinionated, yet extensible, [Carvel packages](#packages).
 
 ## Getting Started
 
-* [Getting Started Guide](https://tanzucommunityedition.io/docs/latest/getting-started)
+* [Getting Started Guide](https://tanzucommunityedition.io/docs/getting-started)
 
 ## Installation
 
@@ -93,7 +93,7 @@ platform. Packages included, by default, in Tanzu Community Edition are:
 ## Contributing
 
 If you are ready to jump in and test, add code, or help with documentation,
-follow the instructions on our [Contribution Guidelines](https://tanzucommunityedition.io/docs/latest/contribute/contributing/) to
+follow the instructions on our [Contribution Guidelines](https://tanzucommunityedition.io/docs/contribute/contributing/) to
 get started and at all times, follow our [Code of
 Conduct](./CODE_OF_CONDUCT.md).
 
@@ -106,9 +106,9 @@ additional context you may have!
 
 Here are quick pointers to the latest **unsigned development** builds for:
 
-* [Linux AMD64 - 2022-03-11](https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/2022-03-11/tce-linux-amd64-v0.11.0-dev.2.tar.gz)
-* [Darwin AMD64 - 2022-03-11](https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/2022-03-11/tce-darwin-amd64-v0.11.0-dev.2.tar.gz)
-* [Windows AMD64 - 2022-03-11](https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/2022-03-11/tce-windows-amd64-v0.11.0-dev.2.zip)
+* [Linux AMD64 - 2022-03-29](https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/2022-03-29/tce-linux-amd64-v0.12.0-dev.1.tar.gz)
+* [Darwin AMD64 - 2022-03-29](https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/2022-03-29/tce-darwin-amd64-v0.12.0-dev.1.tar.gz)
+* [Windows AMD64 - 2022-03-29](https://storage.googleapis.com/tce-cli-plugins-staging/build-daily/2022-03-29/tce-windows-amd64-v0.12.0-dev.1.zip)
 
 ## Repository Layout
 
@@ -130,6 +130,6 @@ The following describes the key directories that make up this repository.
 If you have any questions about Tanzu Community Edition, please join [#tanzu-community-edition](https://kubernetes.slack.com/messages/tanzu-community-edition) on [Kubernetes slack](http://slack.k8s.io/).
 
 Please submit [bugs or enhancements requests](https://github.com/vmware-tanzu/community-edition/issues/new/choose) in GitHub.
-More information about troubleshooting and our triage process is available [here](https://tanzucommunityedition.io/docs/latest/trouble-faq/).
+More information about troubleshooting and our triage process is available [here](https://tanzucommunityedition.io/docs/trouble-faq/).
 
 Information about our roadmap is available [here](https://github.com/vmware-tanzu/community-edition/blob/main/ROADMAP.md).

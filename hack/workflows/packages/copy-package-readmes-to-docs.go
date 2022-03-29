@@ -12,6 +12,8 @@ import (
 	"sort"
 	"strings"
 
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"gopkg.in/yaml.v3"
 )
 
@@ -53,7 +55,7 @@ type Toc struct {
 
 //nolint:funlen
 func main() {
-	docsDir := filepath.Join("..", "..", "..", "docs", "site", "content", "docs", "latest")
+	docsDir := filepath.Join("..", "..", "..", "docs", "site", "content", "docs")
 	imgsDir := filepath.Join("..", "..", "..", "docs", "site", "content", "docs", "img")
 	addonsPackagesDir := filepath.Join("..", "..", "..", "addons", "packages")
 
@@ -117,7 +119,7 @@ func main() {
 	}
 
 	// load the table of contents yaml
-	var latestTocPath = filepath.Join("..", "..", "..", "docs", "site", "data", "docs", "latest-toc.yml")
+	var latestTocPath = filepath.Join("..", "..", "..", "docs", "site", "data", "docs", "main-toc.yml")
 	var toc Toc
 
 	source, err = os.ReadFile(latestTocPath)
@@ -140,7 +142,7 @@ func main() {
 	for key, value := range currentPackageVersions {
 		newPackageVersions = append(newPackageVersions, SubFolderItem{
 			Package: MyPackage{
-				DisplayName: strings.Title(strings.Replace(key, "-", " ", -1)),
+				DisplayName: cases.Title(language.Und).String(strings.Replace(key, "-", " ", -1)),
 				Name:        key,
 				Versions:    value,
 			},

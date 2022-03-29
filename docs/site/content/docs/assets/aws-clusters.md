@@ -1,7 +1,6 @@
-## Create Managed Clusters in AWS
+This section describes deploying a management and workload cluster in Amazon Web Services (AWS).
 
-This section describes setting up management and workload clusters in Amazon Web
-Services (AWS).
+### Deploy a Management Cluster
 
 There are some prerequisites the installation process will assume.  Refer to the [Prepare to Deploy a Management Cluster to AWS](../aws) docs for instructions on deploying an SSH key-pair and preparing your AWS account.
 
@@ -191,6 +190,8 @@ Kubernetes.
     ip-10-0-1-76.us-west-2.compute.internal    Ready    control-plane,master   125m   v1.20.1+vmware.2
     ```
 
+### Deploy a Workload Cluster
+
 1. Next, you will create a workload cluster. First, create a workload cluster configuration file by taking a copy of the management cluster YAML configuration file that was created when you deployed your management cluster. This example names the workload cluster configuration file `workload1.yaml`.
 
     ```sh
@@ -214,6 +215,7 @@ Kubernetes.
    * If you did not specify a name for your management cluster, the installer generated a random unique name. In this case, you must manually add the CLUSTER_NAME parameter and assign a workload cluster name. The workload cluster names must be must be 42 characters or less and must comply with DNS hostname requirements as described here: [RFC 1123](https://tools.ietf.org/html/rfc1123)
    * If you specified a name for your management cluster, the CLUSTER_NAME parameter is present and needs to be changed to the new workload cluster name.
    * The other parameters in ``workload1.yaml`` are likely fine as-is. However, you can change them as required. Validation is performed on the file prior to applying it, so the `tanzu` command will return a message if something necessary is omitted. Reference an example configuration template here:  [AWS Workload Cluster Template](../aws-wl-template).
+   * To deploy a workload cluster with a non-default version of Kubernetes, use the `--tkr` option. For more information, see [Deploy Clusters with Different Kubernetes Versions](../tkr-managed-cluster).
 
 1. Create your workload cluster.
 

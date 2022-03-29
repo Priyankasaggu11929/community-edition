@@ -44,6 +44,11 @@ func (ncm NoopClusterManager) Prepare(c *config.UnmanagedClusterConfig) error {
 
 // PreflightCheck performs any pre-checks that can find issues up front that
 // would cause problems for cluster creation.
-func (ncm NoopClusterManager) PreflightCheck() []error {
-	return nil
+func (ncm NoopClusterManager) PreflightCheck() ([]string, []error) {
+	return nil, nil
+}
+
+// ProviderNotify is a noop. Nothing to notify about for the noop provider
+func (ncm NoopClusterManager) ProviderNotify() []string {
+	return []string{}
 }

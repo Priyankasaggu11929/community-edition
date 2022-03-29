@@ -20,6 +20,7 @@ type createUnmanagedOpts struct {
 	existingClusterKubeconfig string
 	infrastructureProvider    string
 	tkrLocation               string
+	additionalRepo            []string
 	cni                       string
 	podcidr                   string
 	servicecidr               string
@@ -42,7 +43,24 @@ When create is called, it respects the following precedence for all configuratio
 1. flags (most respected)
 2. environment variables
 3. config file
-4. defaults (least respected)`
+4. defaults (least respected)
+
+Exit codes are provided to enhance the automation of bootstrapping and are defined as follows:
+
+0  - Success.
+1  - Configuration is invalid.
+2  - Could not create local cluster directories.
+3  - Unable to get TKR BOM.
+4  - Could not render config.
+5  - TKR BOM not parseable.
+6  - Could not resolve kapp controller bundle.
+7  - Unable to create cluster.
+8  - Unable to use existing cluster (if provided).
+9  - Could not install kapp controller to cluster.
+10 - Could not install core package repo to cluster.
+11 - Could not install additional package repo
+12 - Could not install CNI package.
+13 - Failed to merge kubeconfig and set context`
 
 // CreateCmd creates an unmanaged workload cluster.
 var CreateCmd = &cobra.Command{
@@ -60,7 +78,8 @@ func init() {
 	CreateCmd.Flags().StringVarP(&co.existingClusterKubeconfig, "existing-cluster-kubeconfig", "e", "", "Use an existing kubeconfig to tanzu-ify a cluster")
 	CreateCmd.Flags().StringVar(&co.infrastructureProvider, "provider", "", "The infrastructure provider for cluster creation; default is kind")
 	CreateCmd.Flags().StringVarP(&co.tkrLocation, "tkr", "t", "", "The URL to the image containing a Tanzu Kubernetes release")
-	CreateCmd.Flags().StringVarP(&co.cni, "cni", "c", "calico", "The CNI to deploy; default is calico")
+	CreateCmd.Flags().StringSliceVar(&co.additionalRepo, "additional-repo", []string{}, "Addresses for additional package repositories to install")
+	CreateCmd.Flags().StringVarP(&co.cni, "cni", "c", "", "The CNI to deploy; default is calico")
 	CreateCmd.Flags().StringVar(&co.podcidr, "pod-cidr", "", "The CIDR for Pod IP allocation; default is 10.244.0.0/16")
 	CreateCmd.Flags().StringVar(&co.servicecidr, "service-cidr", "", "The CIDR for Service IP allocation; default is 10.96.0.0/16")
 	CreateCmd.Flags().StringSliceVarP(&co.portMapping, "port-map", "p", []string{}, "Ports to map between container node and the host (format: '80:80/tcp' or just '80')")
@@ -71,7 +90,10 @@ func init() {
 }
 
 func create(cmd *cobra.Command, args []string) {
-	var clusterName string
+	var (
+		clusterName string
+		err         error
+	)
 
 	// Set the cluster name if it was provided, otherwise read from config file
 	if len(args) == 1 {
@@ -81,8 +103,17 @@ func create(cmd *cobra.Command, args []string) {
 	// initial logger, needed for logging if something goes wrong
 	log := logger.NewLogger(TtySetting(cmd.Flags()), 0)
 
+	// Attempt to read cluster name from provided kubeconfig
+	if co.existingClusterKubeconfig != "" {
+		clusterName, err = tanzu.ReadClusterContextFromKubeconfig(co.existingClusterKubeconfig)
+		if err != nil {
+			log.Error(err.Error())
+			os.Exit(tanzu.ErrExistingCluster)
+		}
+	}
+
 	// Determine our configuration to use
-	configArgs := map[string]string{
+	configArgs := map[string]interface{}{
 		config.ClusterConfigFile:         co.clusterConfigFile,
 		config.ExistingClusterKubeconfig: co.existingClusterKubeconfig,
 		config.ClusterName:               clusterName,
@@ -93,6 +124,7 @@ func create(cmd *cobra.Command, args []string) {
 		config.ServiceCIDR:               co.servicecidr,
 		config.ControlPlaneNodeCount:     co.numContPlanes,
 		config.WorkerNodeCount:           co.numWorkers,
+		config.AdditionalPackageRepos:    co.additionalRepo,
 	}
 	clusterConfig, err := config.InitializeConfiguration(configArgs)
 	if err != nil {
@@ -114,7 +146,7 @@ func create(cmd *cobra.Command, args []string) {
 	}
 
 	tm := tanzu.New(log)
-	err, exitCode := tm.Deploy(clusterConfig)
+	exitCode, err := tm.Deploy(clusterConfig)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(exitCode)

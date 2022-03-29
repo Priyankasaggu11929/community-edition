@@ -11,10 +11,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const (
-	tceRepoURL = "projects.registry.vmware.com/tce/main:0.10.1"
-)
-
 // ImagePackage represents information for an image.
 type ImagePackage struct {
 	ImagePath  string `yaml:"imagePath"`
@@ -273,6 +269,9 @@ type Bom struct {
 				TanzuCorePackageRepositoryImage struct {
 					ImagePackage `yaml:",inline"`
 				} `yaml:"tanzuCorePackageRepositoryImage"`
+				TanzuUserPackageRepositoryImage struct {
+					ImagePackage `yaml:",inline"`
+				} `yaml:"tanzuUserPackageRepositoryImage"`
 				VsphereCpiTanzuVmwareCom struct {
 					ImagePackage `yaml:",inline"`
 				} `yaml:"vsphere-cpi.tanzu.vmware.com"`
@@ -484,17 +483,29 @@ func (tkr *Bom) GetTKRNodeImage() string {
 }
 
 func (tkr *Bom) GetTKRCoreRepoBundlePath() string {
-	registry := tkr.getTKRRegistry()
+	registry := tkr.Components.TkgCorePackages[0].Images.TanzuCorePackageRepositoryImage.Repository
+	if registry == "" {
+		registry = tkr.getTKRRegistry()
+	}
 	path := tkr.Components.TkgCorePackages[0].Images.TanzuCorePackageRepositoryImage.ImagePath
 	tag := tkr.Components.TkgCorePackages[0].Images.TanzuCorePackageRepositoryImage.Tag
 
 	return fmt.Sprintf("%s/%s:%s", registry, path, tag)
 }
 
-// TODO(joshrosso): We're waiting on this information to be available in the TKR API
-// for now, we are hard-coding the response
-func (tkr *Bom) GetAdditionalRepoBundlesPaths() []string {
-	return []string{tceRepoURL}
+func (tkr *Bom) GetTKRUserRepoBundlePath() string {
+	registry := tkr.Components.TkgCorePackages[0].Images.TanzuUserPackageRepositoryImage.Repository
+	if registry == "" {
+		registry = tkr.getTKRRegistry()
+	}
+	path := tkr.Components.TkgCorePackages[0].Images.TanzuUserPackageRepositoryImage.ImagePath
+	tag := tkr.Components.TkgCorePackages[0].Images.TanzuUserPackageRepositoryImage.Tag
+
+	if path == "" || tag == "" {
+		return ""
+	}
+
+	return fmt.Sprintf("%s/%s:%s", registry, path, tag)
 }
 
 func (tkr *Bom) GetTKRKappImage() (ImageReader, error) {
