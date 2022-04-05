@@ -156,6 +156,7 @@ toc:
             versions:
                 - 2.2.3
                 - 2.3.3
+                - 2.4.2
         - package:
             displayName: Knative Serving
             name: knative-serving
@@ -181,6 +182,7 @@ toc:
             name: multus-cni
             versions:
                 - 3.7.1
+                - 3.8.0
         - package:
             displayName: Prometheus
             name: prometheus
@@ -201,7 +203,7 @@ toc:
     - title: Administration
       subfolderitems:
         - page: Register a Cluster in Tanzu Mission Control
-          url: tmc-register
+          url: /tmc-register
         - page: Run Conformance Tests
           url: /sonobuoy
         - page: Scale Management Cluster
