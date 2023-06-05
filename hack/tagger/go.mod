@@ -4,7 +4,7 @@ go 1.17
 
 require github.com/google/go-containerregistry v0.8.1-0.20220328141311-efc62d802606
 
-require github.com/sirupsen/logrus v1.8.1
+require github.com/sirupsen/logrus v1.9.3
 
 require (
 	github.com/containerd/stargz-snapshotter/estargz v0.11.1 // indirect
@@ -19,6 +19,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/vbatts/tar-split v0.11.2 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9 // indirect
+	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	gotest.tools/v3 v3.1.0 // indirect
 )
