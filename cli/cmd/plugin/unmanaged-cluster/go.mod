@@ -29,7 +29,7 @@ require (
 	github.com/vmware-tanzu/carvel-vendir v0.26.0
 	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b
 	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.23.5
 	k8s.io/apiextensions-apiserver v0.23.4
 	k8s.io/apimachinery v0.23.5
