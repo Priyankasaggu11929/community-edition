@@ -12,7 +12,7 @@ replace (
 )
 
 require (
-	github.com/spf13/cobra v1.4.0
+	github.com/spf13/cobra v1.10.2
 	github.com/vmware-tanzu/community-edition v0.9.1
 )
 
@@ -23,7 +23,7 @@ require (
 	github.com/k14s/imgpkg v0.6.0
 	github.com/k14s/ytt v0.37.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/spf13/pflag v1.0.5
+	github.com/spf13/pflag v1.0.9
 	github.com/vmware-tanzu/carvel-kapp-controller v0.34.0
 	github.com/vmware-tanzu/carvel-kbld v0.32.1-0.20220207174123-dd5e71b95085
 	github.com/vmware-tanzu/carvel-vendir v0.26.0
@@ -60,7 +60,7 @@ require (
 	github.com/googleapis/gnostic v0.5.5 // indirect
 	github.com/hashicorp/go-version v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/k14s/semver/v4 v4.0.1-0.20210701191048-266d47ac6115 // indirect
 	github.com/k14s/starlark-go v0.0.0-20200720175618-3a5c849cc368 // indirect
